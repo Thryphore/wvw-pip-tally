@@ -104,7 +104,14 @@ export default function App() {
       <section className="api-section">
         <div className="block-head">
           <h2>API key</h2>
-          <span className="meta">optional · fills rank & placement</span>
+          <a
+            className="meta api-link"
+            href="https://gw2timer.com/out/?u=https://account.arena.net/applications"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Get an API key
+          </a>
         </div>
         <div className="api-bar">
           <label className="sr-only" htmlFor="api-key">
@@ -115,7 +122,7 @@ export default function App() {
             type={showKey ? 'text' : 'password'}
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="account · progression · wvw"
+            placeholder="Enter API key here"
             autoComplete="off"
             spellCheck={false}
           />

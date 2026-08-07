@@ -223,6 +223,16 @@ button:disabled {
   color: var(--muted);
 }
 
+.api-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.api-link:hover {
+  text-decoration: underline;
+  color: #6ee0d0;
+}
+
 .seg-control {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
