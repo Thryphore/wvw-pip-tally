@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thryphore.github.io/wvw-pip-tally/sitemap.xml

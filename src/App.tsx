@@ -89,8 +89,15 @@ export default function App() {
 
       <header className="topbar">
         <div className="brand-block">
-          <h1 className="brand">WvW Pip Tally</h1>
-          <p className="tag">Match Rewards Calculator</p>
+          <div className="brand-row">
+            <h1 className="brand">WvW Pip Tally</h1>
+            <p className="tag">Guild Wars 2 WvW match rewards calculator</p>
+          </div>
+          <p className="blurb">
+            See pips per tick and time left on the weekly reward track from your chest, placement,
+            rank, and bonuses. Paste an API key to autofill rank and placement; chest progress is
+            still manual.
+          </p>
         </div>
       </header>
 
