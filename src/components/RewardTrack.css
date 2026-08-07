@@ -1,0 +1,197 @@
+.reward-track {
+  position: relative;
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0, 0, 0, 0.55), transparent 70%),
+    linear-gradient(180deg, #2a2218 0%, #1a1510 40%, #120e0b 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 230, 180, 0.08);
+}
+
+.reward-track::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.18) 2px,
+      rgba(0, 0, 0, 0.18) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(80, 55, 30, 0.12) 3px,
+      rgba(80, 55, 30, 0.12) 4px
+    );
+}
+
+.reward-track-scroll {
+  position: relative;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.85rem 0.75rem 0.7rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(226, 165, 58, 0.45) transparent;
+}
+
+.reward-track-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.reward-track-scroll::-webkit-scrollbar-thumb {
+  background: rgba(226, 165, 58, 0.4);
+  border-radius: 999px;
+}
+
+.tier-card {
+  flex: 0 0 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.35rem 0.3rem 0.15rem;
+  scroll-snap-align: center;
+  text-align: center;
+}
+
+.tier-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #f2f0ea;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.tier-status {
+  margin: 0;
+  min-height: 1.1rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #d8d2c6;
+}
+
+.tier-status.status-completed {
+  color: #6fce5a;
+}
+
+.tier-status.status-active {
+  color: #f2f0ea;
+}
+
+.tier-status.status-locked {
+  color: #b8b0a4;
+}
+
+.tier-pips {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.18rem;
+  min-height: 1.15rem;
+  margin: 0.1rem 0 0.15rem;
+}
+
+.tier-pips .pip {
+  flex: 0 0 auto;
+}
+
+.pip {
+  display: grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(245, 242, 235, 0.88);
+  cursor: pointer;
+  transition: transform 0.12s ease, color 0.12s ease, filter 0.12s ease;
+}
+
+.pip svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pip:hover {
+  transform: scale(1.12);
+  color: #fff;
+}
+
+.pip-done {
+  color: #f4f1ea;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.35));
+}
+
+.pip-active {
+  color: #fff;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.75));
+  animation: pip-pulse 1.6s ease-in-out infinite;
+}
+
+.pip-locked {
+  color: rgba(230, 225, 215, 0.55);
+}
+
+.tier-chest-btn {
+  display: grid;
+  place-items: center;
+  width: 5.8rem;
+  height: 5.8rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.tier-chest-btn:hover {
+  transform: translateY(-2px);
+}
+
+.tier-chest-btn img,
+.chest-icon {
+  width: 5.6rem;
+  height: 5.6rem;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.chest-icon.is-dimmed {
+  opacity: 0.72;
+}
+
+@keyframes pip-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.55));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.95));
+  }
+}
+
+@media (max-width: 700px) {
+  .tier-card {
+    flex-basis: 6.6rem;
+  }
+
+  .tier-chest-btn,
+  .tier-chest-btn img {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+}

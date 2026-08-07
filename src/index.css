@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --font: 'Manrope', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Manrope', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --bg: #07090d;
+  --surface: rgba(18, 24, 33, 0.72);
+  --surface-solid: #121821;
+  --surface-2: #1a222d;
+  --ink: #f3f6f8;
+  --muted: #80919f;
+  --muted-2: #b7c4ce;
+  --accent: #37c2b0;
+  --accent-2: #f0b429;
+  --accent-dim: rgba(55, 194, 176, 0.14);
+  --accent-2-dim: rgba(240, 180, 41, 0.14);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.12);
+  --danger: #ff7b86;
+  --ok: #62d49a;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+
+  font-family: var(--font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(55, 194, 176, 0.35);
+}
