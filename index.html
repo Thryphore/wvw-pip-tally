@@ -2,9 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48" />
+    <link rel="icon" href="/favicon-192x192.png" type="image/png" sizes="192x192" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guild Wars 2 WvW Pip Calculator | WvW Pip Tally</title>
+    <meta name="application-name" content="WvW Pip Tally" />
+    <meta name="apple-mobile-web-app-title" content="WvW Pip Tally" />
+    <title>WvW Pip Tally | Guild Wars 2 WvW Pip Calculator</title>
     <meta
       name="description"
       content="Guild Wars 2 WvW skirmish reward track calculator. Estimate pips per tick and time to Diamond, with optional API autofill for rank and placement."
@@ -13,7 +18,7 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://thryphore.github.io/wvw-pip-tally/" />
-    <meta property="og:title" content="Guild Wars 2 WvW Pip Calculator | WvW Pip Tally" />
+    <meta property="og:title" content="WvW Pip Tally | Guild Wars 2 WvW Pip Calculator" />
     <meta
       property="og:description"
       content="Estimate pips per tick and time to Diamond on the Guild Wars 2 WvW reward track, with optional API autofill."
@@ -26,7 +31,7 @@
     <meta property="og:image:alt" content="WvW Pip Tally — Guild Wars 2 WvW pip calculator" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Guild Wars 2 WvW Pip Calculator | WvW Pip Tally" />
+    <meta name="twitter:title" content="WvW Pip Tally | Guild Wars 2 WvW Pip Calculator" />
     <meta
       name="twitter:description"
       content="Estimate pips per tick and time to Diamond on the Guild Wars 2 WvW reward track, with optional API autofill."
@@ -39,19 +44,29 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "WvW Pip Tally",
-        "url": "https://thryphore.github.io/wvw-pip-tally/",
-        "description": "Guild Wars 2 WvW skirmish reward track calculator. Estimate pips per tick and time to Diamond, with optional API autofill for rank and placement.",
-        "applicationCategory": "GameApplication",
-        "operatingSystem": "Any",
-        "browserRequirements": "Requires JavaScript",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "image": "https://thryphore.github.io/wvw-pip-tally/og-image.png"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "WvW Pip Tally",
+            "alternateName": ["WvW Pip Calculator", "Guild Wars 2 WvW Pip Calculator"],
+            "url": "https://thryphore.github.io/wvw-pip-tally/"
+          },
+          {
+            "@type": "WebApplication",
+            "name": "WvW Pip Tally",
+            "url": "https://thryphore.github.io/wvw-pip-tally/",
+            "description": "Guild Wars 2 WvW skirmish reward track calculator. Estimate pips per tick and time to Diamond, with optional API autofill for rank and placement.",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "image": "https://thryphore.github.io/wvw-pip-tally/og-image.png"
+          }
+        ]
       }
     </script>
   </head>
