@@ -3,6 +3,22 @@ import { rankTierFromWvWRank, type Placement, type RankTier } from './pips'
 const API = 'https://api.guildwars2.com/v2'
 const ACCOUNT_SCHEMA = '2024-07-20T01:00:00.000Z'
 
+export type Gw2ApiErrorCode = 'empty_key' | 'invalid_key' | 'http_error' | 'no_rank'
+
+export class Gw2ApiError extends Error {
+  readonly code: Gw2ApiErrorCode
+  readonly status?: number
+  readonly detail?: string
+
+  constructor(code: Gw2ApiErrorCode, options?: { status?: number; detail?: string }) {
+    super(code)
+    this.name = 'Gw2ApiError'
+    this.code = code
+    this.status = options?.status
+    this.detail = options?.detail
+  }
+}
+
 export interface ApiAutofill {
   accountName: string
   wvwRank: number
@@ -46,9 +62,12 @@ async function apiGet<T>(path: string, token?: string): Promise<T> {
   if (!res.ok) {
     const body = await res.text().catch(() => '')
     if (res.status === 401 || res.status === 403) {
-      throw new Error('API key is invalid or missing required permissions (account, progression, wvw).')
+      throw new Gw2ApiError('invalid_key')
     }
-    throw new Error(`GW2 API error (${res.status}): ${body || res.statusText}`)
+    throw new Gw2ApiError('http_error', {
+      status: res.status,
+      detail: body || res.statusText,
+    })
   }
   return res.json() as Promise<T>
 }
@@ -94,7 +113,7 @@ function placementFromScores(
 
 export async function fetchAutofillFromApiKey(apiKey: string): Promise<ApiAutofill> {
   const key = apiKey.trim()
-  if (!key) throw new Error('Enter an API key first.')
+  if (!key) throw new Gw2ApiError('empty_key')
 
   const account = await apiGet<AccountResponse>(
     `/account?v=${encodeURIComponent(ACCOUNT_SCHEMA)}`,
@@ -103,7 +122,7 @@ export async function fetchAutofillFromApiKey(apiKey: string): Promise<ApiAutofi
 
   const wvwRank = account.wvw?.rank ?? account.wvw_rank
   if (typeof wvwRank !== 'number') {
-    throw new Error('Could not read WvW rank. Ensure the key has the progression permission.')
+    throw new Gw2ApiError('no_rank')
   }
 
   let teamId = account.wvw?.team_id ?? null

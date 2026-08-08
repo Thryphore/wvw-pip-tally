@@ -5,6 +5,8 @@ import {
   segmentsByDivision,
   type ChestSegment,
 } from '../lib/pips'
+import { useLocale } from '../i18n/locale'
+import type { MessageKey } from '../i18n/messages'
 import { ChestIcon, type Tier } from './ChestIcon'
 import './RewardTrack.css'
 
@@ -62,25 +64,35 @@ function Pip({
 function statusForDivision(
   segs: ChestSegment[],
   startingSegmentIndex: number,
+  t: (key: MessageKey, vars?: Record<string, string | number>) => string,
 ): { kind: 'completed' | 'active' | 'locked'; text: string } {
   const indices = segs.map((s) => CHEST_INDEX[s.id])
   const first = indices[0]
   const last = indices[indices.length - 1]
 
   if (startingSegmentIndex > last) {
-    return { kind: 'completed', text: 'Completed' }
+    return { kind: 'completed', text: t('track.completed') }
   }
   if (startingSegmentIndex < first) {
-    return { kind: 'locked', text: 'Locked' }
+    return { kind: 'locked', text: t('track.locked') }
   }
   const rewardNum = startingSegmentIndex - first + 1
   return {
     kind: 'active',
-    text: `Next: Reward ${rewardNum} of ${segs.length}`,
+    text: t('track.next', { current: rewardNum, total: segs.length }),
   }
 }
 
+function divisionLabel(
+  division: string,
+  t: (key: MessageKey, vars?: Record<string, string | number>) => string,
+): string {
+  const key = `division.${division}` as MessageKey
+  return t(key)
+}
+
 export function RewardTrack({ startingSegmentIndex, onSelect }: RewardTrackProps) {
+  const { t } = useLocale()
   const scrollerRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLElement | null>(null)
 
@@ -93,8 +105,9 @@ export function RewardTrack({ startingSegmentIndex, onSelect }: RewardTrackProps
       <div className="reward-track-scroll" ref={scrollerRef} role="list">
         {DIVISIONS.map((division) => {
           const segs = divisionMap.get(division) ?? []
-          const status = statusForDivision(segs, startingSegmentIndex)
+          const status = statusForDivision(segs, startingSegmentIndex, t)
           const isComplete = status.kind === 'completed'
+          const name = divisionLabel(division, t)
 
           return (
             <article
@@ -103,10 +116,10 @@ export function RewardTrack({ startingSegmentIndex, onSelect }: RewardTrackProps
               role="listitem"
               ref={status.kind === 'active' ? (el) => { activeRef.current = el } : undefined}
             >
-              <h3 className="tier-name">{division}</h3>
+              <h3 className="tier-name">{name}</h3>
               <p className={`tier-status status-${status.kind}`}>{status.text}</p>
 
-              <div className="tier-pips" role="group" aria-label={`${division} rewards`}>
+              <div className="tier-pips" role="group" aria-label={t('track.rewardsAria', { division: name })}>
                 {segs.map((seg) => {
                   const idx = CHEST_INDEX[seg.id]
                   const state =
@@ -120,7 +133,12 @@ export function RewardTrack({ startingSegmentIndex, onSelect }: RewardTrackProps
                       key={seg.id}
                       state={state}
                       onClick={() => onSelect(idx)}
-                      label={`${division} reward ${seg.segmentIndex + 1}: ${seg.pips} pips, ${seg.tickets} tickets`}
+                      label={t('track.pipLabel', {
+                        division: name,
+                        n: seg.segmentIndex + 1,
+                        pips: seg.pips,
+                        tickets: seg.tickets,
+                      })}
                     />
                   )
                 })}
@@ -136,7 +154,7 @@ export function RewardTrack({ startingSegmentIndex, onSelect }: RewardTrackProps
                   else if (startingSegmentIndex > lastIdx) onSelect(lastIdx)
                   else onSelect(startingSegmentIndex)
                 }}
-                aria-label={`Select ${division} track`}
+                aria-label={t('track.selectAria', { division: name })}
               >
                 <ChestIcon
                   tier={division as Tier}

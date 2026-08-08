@@ -29,10 +29,46 @@
 .topbar {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1.1rem;
   padding: 0.2rem 0 0.95rem;
   border-bottom: 1px solid var(--line);
   animation: in 0.35s ease both;
+}
+
+.lang-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+.lang-btn {
+  height: 1.85rem;
+  min-width: 2.4rem;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lang-btn:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lang-btn.active {
+  color: var(--ink);
+  background: rgba(55, 194, 176, 0.16);
 }
 
 .brand-block {
@@ -729,6 +765,15 @@ button:disabled {
 }
 
 @media (max-width: 700px) {
+  .topbar {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .lang-switch {
+    margin-left: auto;
+  }
+
   .api-bar {
     grid-template-columns: 1fr auto auto;
   }

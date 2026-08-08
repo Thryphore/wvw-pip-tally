@@ -1,3 +1,4 @@
+import type { Locale } from '../i18n/messages'
 import type { Placement, RankTier } from './pips'
 
 const STORAGE_KEY = 'wvw-pip-tally'
@@ -10,6 +11,7 @@ export interface StoredSettings {
   commitment: boolean
   commander: boolean
   publicCommander: boolean
+  locale?: Locale
 }
 
 const DEFAULTS: StoredSettings = {

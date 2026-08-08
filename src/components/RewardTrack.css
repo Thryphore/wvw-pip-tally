@@ -74,10 +74,15 @@
 
 .tier-status {
   margin: 0;
-  min-height: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2.2em;
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.01em;
+  line-height: 1.1;
   color: #d8d2c6;
 }
 

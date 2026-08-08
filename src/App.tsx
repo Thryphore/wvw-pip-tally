@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { fetchAutofillFromApiKey, type ApiAutofill } from './lib/gw2Api'
+import { fetchAutofillFromApiKey, Gw2ApiError, type ApiAutofill } from './lib/gw2Api'
 import {
   PLACEMENT_PIPS,
   RANK_OPTIONS,
@@ -9,15 +9,14 @@ import {
 } from './lib/pips'
 import { loadSettings, saveSettings } from './lib/storage'
 import { RewardTrack } from './components/RewardTrack'
+import { useLocale } from './i18n/locale'
+import { LOCALES, type Locale, type MessageKey } from './i18n/messages'
 import './App.css'
 
-const PLACEMENTS = [
-  ['first', '1st', 6],
-  ['second', '2nd', 5],
-  ['third', '3rd', 4],
-] as const
+const PLACEMENT_IDS = ['first', 'second', 'third'] as const
 
 export default function App() {
+  const { locale, setLocale, t } = useLocale()
   const initial = useMemo(() => loadSettings(), [])
 
   const [apiKey, setApiKey] = useState(initial.apiKey)
@@ -29,7 +28,7 @@ export default function App() {
   const [publicCommander, setPublicCommander] = useState(initial.publicCommander)
 
   const [apiLoading, setApiLoading] = useState(false)
-  const [apiError, setApiError] = useState<string | null>(null)
+  const [apiError, setApiError] = useState<Gw2ApiError | 'unknown' | null>(null)
   const [apiInfo, setApiInfo] = useState<ApiAutofill | null>(null)
   const [showKey, setShowKey] = useState(false)
 
@@ -55,8 +54,35 @@ export default function App() {
       commitment,
       commander,
       publicCommander,
+      locale,
     })
-  }, [apiKey, startingSegmentIndex, placement, rank, commitment, commander, publicCommander])
+  }, [
+    apiKey,
+    startingSegmentIndex,
+    placement,
+    rank,
+    commitment,
+    commander,
+    publicCommander,
+    locale,
+  ])
+
+  function formatApiError(err: Gw2ApiError | 'unknown'): string {
+    if (err === 'unknown') return t('api.fetchFailed')
+    switch (err.code) {
+      case 'empty_key':
+        return t('api.error.emptyKey')
+      case 'invalid_key':
+        return t('api.error.invalidKey')
+      case 'no_rank':
+        return t('api.error.noRank')
+      case 'http_error':
+        return t('api.error.http', {
+          status: err.status ?? '?',
+          detail: err.detail || '',
+        })
+    }
+  }
 
   async function handleApiFetch() {
     setApiLoading(true)
@@ -68,7 +94,7 @@ export default function App() {
       if (data.placement) setPlacement(data.placement)
     } catch (err) {
       setApiInfo(null)
-      setApiError(err instanceof Error ? err.message : 'Failed to fetch from API.')
+      setApiError(err instanceof Gw2ApiError ? err : 'unknown')
     } finally {
       setApiLoading(false)
     }
@@ -78,10 +104,16 @@ export default function App() {
     (commitment ? 1 : 0) + (commander ? 1 : 0) + (publicCommander ? 3 : 0)
 
   const breakdown = [
-    { label: 'Placement', value: PLACEMENT_PIPS[placement] },
-    { label: 'Rank', value: RANK_OPTIONS.find((r) => r.id === rank)?.pips ?? 0 },
-    { label: 'Bonus', value: bonusPips },
+    { key: 'placement' as const, label: t('results.breakdown.placement'), value: PLACEMENT_PIPS[placement] },
+    {
+      key: 'rank' as const,
+      label: t('results.breakdown.rank'),
+      value: RANK_OPTIONS.find((r) => r.id === rank)?.pips ?? 0,
+    },
+    { key: 'bonus' as const, label: t('results.breakdown.bonus'), value: bonusPips },
   ]
+
+  const placementLabel = (id: Placement) => t(`placement.${id}` as MessageKey)
 
   return (
     <div className="app">
@@ -91,17 +123,26 @@ export default function App() {
         <div className="brand-block">
           <div className="brand-row">
             <h1 className="brand">WvW Pip Tally</h1>
-            <p className="tag">Guild Wars 2 WvW match rewards calculator</p>
+            <p className="tag">{t('tagline')}</p>
           </div>
-          <p className="blurb">
-            See pips per tick and time left on the weekly reward track from your chest, placement,
-            rank, and bonuses. Paste an API key to autofill rank and placement; chest progress is
-            still manual.
-          </p>
+          <p className="blurb">{t('blurb')}</p>
+        </div>
+        <div className="lang-switch" role="group" aria-label={t('lang.label')}>
+          {LOCALES.map((code) => (
+            <button
+              key={code}
+              type="button"
+              className={`lang-btn${locale === code ? ' active' : ''}`}
+              aria-pressed={locale === code}
+              onClick={() => setLocale(code as Locale)}
+            >
+              {t(`lang.${code}` as MessageKey)}
+            </button>
+          ))}
         </div>
       </header>
 
-      <section className="track-block" aria-label="Reward track">
+      <section className="track-block" aria-label={t('rewardTrack.aria')}>
         <RewardTrack
           startingSegmentIndex={startingSegmentIndex}
           onSelect={setStartingSegmentIndex}
@@ -110,34 +151,34 @@ export default function App() {
 
       <section className="api-section">
         <div className="block-head">
-          <h2>API key</h2>
+          <h2>{t('api.title')}</h2>
           <a
             className="meta api-link"
             href="https://gw2timer.com/out/?u=https://account.arena.net/applications"
             target="_blank"
             rel="noreferrer"
           >
-            Get an API key
+            {t('api.getKey')}
           </a>
         </div>
         <div className="api-bar">
           <label className="sr-only" htmlFor="api-key">
-            Guild Wars 2 API key
+            {t('api.label')}
           </label>
           <input
             id="api-key"
             type={showKey ? 'text' : 'password'}
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter API key here"
+            placeholder={t('api.placeholder')}
             autoComplete="off"
             spellCheck={false}
           />
           <button type="button" className="ghost" onClick={() => setShowKey((v) => !v)}>
-            {showKey ? 'Hide' : 'Show'}
+            {showKey ? t('api.hide') : t('api.show')}
           </button>
           <button type="button" className="primary" onClick={handleApiFetch} disabled={apiLoading}>
-            {apiLoading ? '…' : 'Pull'}
+            {apiLoading ? '…' : t('api.pull')}
           </button>
         </div>
         {(apiError || apiInfo) && (
@@ -145,17 +186,19 @@ export default function App() {
             className={`banner ${apiError ? 'is-error' : 'is-ok'}`}
             role={apiError ? 'alert' : 'status'}
           >
-            {apiError ?? (
+            {apiError ? (
+              formatApiError(apiError)
+            ) : (
               <>
                 <strong>{apiInfo!.accountName}</strong>
                 {apiInfo!.worldName ? ` · ${apiInfo!.worldName}` : ''}
-                {` · rank ${apiInfo!.wvwRank}`}
+                {` · ${t('api.rank', { rank: apiInfo!.wvwRank })}`}
                 {apiInfo!.placement
-                  ? ` · ${apiInfo!.placement} in current skirmish`
-                  : ' · placement unavailable'}
+                  ? ` · ${t('api.placement', { placement: placementLabel(apiInfo!.placement) })}`
+                  : ` · ${t('api.placementUnavailable')}`}
                 {apiInfo!.playerColor ? ` (${apiInfo!.playerColor}` : ''}
                 {apiInfo!.skirmishScores && apiInfo!.playerColor
-                  ? ` ${apiInfo!.skirmishScores[apiInfo!.playerColor]} war score)`
+                  ? ` ${t('api.warScore', { score: apiInfo!.skirmishScores[apiInfo!.playerColor] })})`
                   : apiInfo!.playerColor
                     ? ')'
                     : ''}
@@ -169,10 +212,10 @@ export default function App() {
         <div className="inputs">
           <section className="section">
             <div className="block-head">
-              <h2>Placement</h2>
+              <h2>{t('placement.title')}</h2>
             </div>
-            <div className="seg-control" role="radiogroup" aria-label="World placement">
-              {PLACEMENTS.map(([id, label, pips]) => (
+            <div className="seg-control" role="radiogroup" aria-label={t('placement.aria')}>
+              {PLACEMENT_IDS.map((id) => (
                 <label
                   key={id}
                   className={`place-${id}${placement === id ? ' active' : ''}`}
@@ -183,8 +226,8 @@ export default function App() {
                     checked={placement === id}
                     onChange={() => setPlacement(id)}
                   />
-                  <span>{label}</span>
-                  <em>+{pips}</em>
+                  <span>{placementLabel(id)}</span>
+                  <em>+{PLACEMENT_PIPS[id]}</em>
                 </label>
               ))}
             </div>
@@ -192,9 +235,9 @@ export default function App() {
 
           <section className="section">
             <div className="block-head">
-              <h2>Rank</h2>
+              <h2>{t('rank.title')}</h2>
             </div>
-            <div className="chip-grid" role="radiogroup" aria-label="Personal rank">
+            <div className="chip-grid" role="radiogroup" aria-label={t('rank.aria')}>
               {RANK_OPTIONS.map((opt) => (
                 <label key={opt.id} className={`chip ${rank === opt.id ? 'active' : ''}`}>
                   <input
@@ -203,9 +246,13 @@ export default function App() {
                     checked={rank === opt.id}
                     onChange={() => setRank(opt.id)}
                   />
-                  <span className="chip-name">{opt.id === 'max' ? 'Max' : opt.id}</span>
+                  <span className="chip-name">
+                    {opt.id === 'max' ? t('rank.max') : opt.id}
+                  </span>
                   <span className="chip-range">
-                    {opt.min === opt.max ? `Lv ${opt.max}` : `Lv ${opt.min}–${opt.max}`}
+                    {opt.min === opt.max
+                      ? t('rank.level', { level: opt.max })
+                      : t('rank.levelRange', { min: opt.min, max: opt.max })}
                   </span>
                   <em>+{opt.pips}</em>
                 </label>
@@ -215,7 +262,7 @@ export default function App() {
 
           <section className="section">
             <div className="block-head">
-              <h2>Bonuses</h2>
+              <h2>{t('bonuses.title')}</h2>
             </div>
             <div className="toggle-row">
               <label className={`toggle ${commitment ? 'active' : ''}`}>
@@ -224,7 +271,7 @@ export default function App() {
                   checked={commitment}
                   onChange={(e) => setCommitment(e.target.checked)}
                 />
-                <span>Commitment</span>
+                <span>{t('bonuses.commitment')}</span>
                 <em>+1</em>
               </label>
               <label className={`toggle ${commander ? 'active' : ''}`}>
@@ -233,7 +280,7 @@ export default function App() {
                   checked={commander}
                   onChange={(e) => setCommander(e.target.checked)}
                 />
-                <span>Commander</span>
+                <span>{t('bonuses.commander')}</span>
                 <em>+1</em>
               </label>
               <label className={`toggle ${publicCommander ? 'active' : ''}`}>
@@ -242,7 +289,7 @@ export default function App() {
                   checked={publicCommander}
                   onChange={(e) => setPublicCommander(e.target.checked)}
                 />
-                <span>Public cmd</span>
+                <span>{t('bonuses.publicCmd')}</span>
                 <em>+3</em>
               </label>
             </div>
@@ -252,29 +299,29 @@ export default function App() {
         <aside className="results" aria-labelledby="results-heading">
           <div className="results-sticky">
             <div className="block-head">
-              <h2 id="results-heading">Results</h2>
+              <h2 id="results-heading">{t('results.title')}</h2>
             </div>
 
             <div className="kpi-grid">
               <div className="kpi accent">
-                <span>Time left</span>
+                <span>{t('results.timeLeft')}</span>
                 <strong>
                   {results.hoursRemaining}
-                  <small>h</small>
+                  <small>{t('results.hours')}</small>
                   {results.minutesRemaining}
-                  <small>m</small>
+                  <small>{t('results.minutes')}</small>
                 </strong>
               </div>
               <div className="kpi">
-                <span>Pips / tick</span>
+                <span>{t('results.pipsPerTick')}</span>
                 <strong>{results.pipsPerTick}</strong>
               </div>
               <div className="kpi">
-                <span>Tickets left</span>
+                <span>{t('results.ticketsLeft')}</span>
                 <strong>{results.remainingTickets}</strong>
               </div>
               <div className="kpi">
-                <span>Pips left</span>
+                <span>{t('results.pipsLeft')}</span>
                 <strong>{results.remainingPips}</strong>
               </div>
             </div>
@@ -282,7 +329,7 @@ export default function App() {
             <div className="meters">
               <div className="meter">
                 <div className="meter-head">
-                  <span>Pips</span>
+                  <span>{t('results.pips')}</span>
                   <span>
                     {results.finishedPips}/{results.totalPips} · {results.pipPercent}%
                   </span>
@@ -293,7 +340,7 @@ export default function App() {
               </div>
               <div className="meter">
                 <div className="meter-head">
-                  <span>Tickets</span>
+                  <span>{t('results.tickets')}</span>
                   <span>
                     {results.earnedTickets}/{results.totalTickets} · {results.ticketPercent}%
                   </span>
@@ -306,21 +353,18 @@ export default function App() {
 
             <ul className="breakdown">
               {breakdown.map((row) => (
-                <li key={row.label}>
+                <li key={row.key}>
                   <span>{row.label}</span>
                   <span className={row.value ? '' : 'zero'}>+{row.value}</span>
                 </li>
               ))}
               <li className="total">
-                <span>Total / tick</span>
+                <span>{t('results.totalPerTick')}</span>
                 <span>{results.pipsPerTick}</span>
               </li>
             </ul>
 
-            <p className="footnote">
-              Assumes Tier 3+ participation every 5 minutes. Full track is 1450 pips (365 tickets)
-              and resets with weekly WvW reset.
-            </p>
+            <p className="footnote">{t('results.footnote')}</p>
           </div>
         </aside>
       </main>
@@ -329,11 +373,11 @@ export default function App() {
         <div className="footer-main">
           <div className="footer-brand">
             <strong>WvW Pip Tally</strong>
-            <span>Not affiliated with ArenaNet</span>
+            <span>{t('footer.disclaimer')}</span>
           </div>
           <div className="footer-links">
             <div className="footer-chip">
-              <span className="footer-label">Made by</span>
+              <span className="footer-label">{t('footer.madeBy')}</span>
               <span className="footer-value">navi.5047</span>
             </div>
             <a
@@ -342,7 +386,7 @@ export default function App() {
               target="_blank"
               rel="noreferrer"
             >
-              Support on Ko-fi
+              {t('footer.kofi')}
             </a>
           </div>
         </div>
