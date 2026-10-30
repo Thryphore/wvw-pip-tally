@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thryphore.github.io/wvw-pip-tally/sitemap.xml
+Sitemap: https://wvwpiptally.jacobwittig.com/sitemap.xml
