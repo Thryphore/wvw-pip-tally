@@ -122,8 +122,17 @@ export default function App() {
       <header className="topbar">
         <div className="brand-block">
           <div className="brand-row">
-            <h1 className="brand">WvW Pip Tally</h1>
-            <p className="tag">{t('tagline')}</p>
+            <img
+              className="brand-icon"
+              src={`${import.meta.env.BASE_URL}brand-icon.png`}
+              alt=""
+              width={40}
+              height={40}
+            />
+            <div className="brand-text">
+              <h1 className="brand">WvW Pip Tally</h1>
+              <p className="tag">{t('tagline')}</p>
+            </div>
           </div>
           <p className="blurb">{t('blurb')}</p>
         </div>
@@ -368,6 +377,23 @@ export default function App() {
           </div>
         </aside>
       </main>
+
+      <section className="blish-section" aria-labelledby="blish-heading">
+        <div className="blish-copy">
+          <div className="block-head">
+            <h2 id="blish-heading">{t('blish.title')}</h2>
+          </div>
+          <p>{t('blish.body')}</p>
+        </div>
+        <a
+          className="blish-cta"
+          href="https://blishhud.com/modules/?module=gw2.wvwpiptally"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t('blish.cta')}
+        </a>
+      </section>
 
       <footer className="footer">
         <div className="footer-main">

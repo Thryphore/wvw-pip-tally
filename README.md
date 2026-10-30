@@ -4,6 +4,8 @@ A modern Guild Wars 2 WvW skirmish reward track (pips) calculator. Inspired by [
 
 Pick your current chest, placement, rank, and bonuses to see pips per tick and time remaining until Diamond. Optionally paste an API key to autofill personal rank and current skirmish placement.
 
+Also available in-game as a [Blish HUD module](https://blishhud.com/modules/?module=gw2.wvwpiptally) that can scan your screen to automate the same calculations.
+
 ## API key permissions
 
 Create a key at [account.arena.net/applications](https://account.arena.net/applications) with:

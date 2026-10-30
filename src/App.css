@@ -82,8 +82,24 @@
 .brand-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 0.9rem;
+}
+
+.brand-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.55rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.brand-text {
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.65rem 0.85rem;
+  gap: 0.45rem 0.85rem;
+  min-width: 0;
 }
 
 .brand {
@@ -650,6 +666,63 @@ button:disabled {
   gap: 0.15rem;
 }
 
+.blish-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.85rem 0 1.1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 2px);
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  animation: in 0.4s ease 0.1s both;
+}
+
+.blish-copy {
+  min-width: 0;
+}
+
+.blish-copy .block-head {
+  margin-bottom: 0.35rem;
+}
+
+.blish-copy p {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.blish-cta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 2.2rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #4ad4c2, #2aaea0);
+  color: #041210;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    filter 0.15s ease,
+    transform 0.12s ease;
+}
+
+.blish-cta:hover {
+  filter: brightness(1.05);
+}
+
+.blish-cta:active {
+  transform: translateY(1px);
+}
+
 .footer-brand strong {
   font-family: var(--font-display);
   font-size: 0.95rem;
@@ -720,6 +793,15 @@ button:disabled {
 }
 
 @media (max-width: 700px) {
+  .blish-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .blish-cta {
+    width: 100%;
+  }
+
   .footer-main {
     flex-direction: column;
     align-items: stretch;

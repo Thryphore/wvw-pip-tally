@@ -60,6 +60,11 @@ const en = {
   'results.footnote':
     'Assumes Tier 3+ participation every 5 minutes. Full track is 1450 pips (365 tickets) and resets with weekly WvW reset.',
 
+  'blish.title': 'Blish HUD addon',
+  'blish.body':
+    'Want the same estimates in-game? The WvW Pip Tally Blish HUD module can scan your screen to fill inputs automatically, or you can enter them by hand.',
+  'blish.cta': 'Get the Blish module',
+
   'footer.disclaimer': 'Not affiliated with ArenaNet',
   'footer.madeBy': 'Made by',
   'footer.kofi': 'Support on Ko-fi',
@@ -144,6 +149,11 @@ const pt: Record<MessageKey, string> = {
   'results.totalPerTick': 'Total / tick',
   'results.footnote':
     'Assume participação Tier 3+ a cada 5 minutos. A trilha completa tem 1450 pips (365 tickets) e reinicia com o reset semanal do WvW.',
+
+  'blish.title': 'Addon do Blish HUD',
+  'blish.body':
+    'Quer as mesmas estimativas no jogo? O módulo WvW Pip Tally para Blish HUD pode escanear a tela para preencher os dados automaticamente, ou você pode inseri-los manualmente.',
+  'blish.cta': 'Obter o módulo Blish',
 
   'footer.disclaimer': 'Não afiliado à ArenaNet',
   'footer.madeBy': 'Feito por',
