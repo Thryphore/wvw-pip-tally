@@ -20,3 +20,5 @@ The key stays in `localStorage` on your machine. Chest progress is not exposed b
 
 - Requires Tier 3+ participation at tick end to earn pips.
 - Ticks are every 5 minutes; weekly track is 1450 pips / 365 claim tickets.
+
+Live site at https://wvwpiptally.jacobwittig.com/
